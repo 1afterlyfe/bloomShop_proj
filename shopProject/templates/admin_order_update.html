@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}
+Адміністрування
+{% endblock %}
+{% block content %}
+<section class="container my-4">
+    <h1 class="text-center mb-4">Оновлення замовлення №{{ order.id }}</h1>
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+    <form method="POST" action="{{ url_for('admin_order_update', order_id=order.id) }}" class="col-md-6 mx-auto">
+        <div class="mb-3">
+            <label for="status" class="form-label">Статус</label>
+            <select class="form-select" id="status" name="status" required>
+                {% for status in statuses %}
+                    <option value="{{ status }}" {% if status == order.status %}selected{% endif %}>
+                        {{ status }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Оновити статус</button>
+        <a href="{{ url_for('admin_orders') }}" class="btn btn-secondary">Назад</a>
+    </form>
+</section>
+{% endblock %}

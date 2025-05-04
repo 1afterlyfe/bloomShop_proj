@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}
+Дякуємо!
+{% endblock %}
+{% block content %}
+
+<!-- confirm -->
+<section class="container my-4 text-center">
+    <h1 class="mb-4">Дякуємо за замовлення!</h1>
+    <p>Ваше замовлення №{{ order_id }} успішно оформлено.</p>
+    {% if email_sent %}
+        <p>Підтвердження надіслано на вашу електронну пошту.</p>
+    {% else %}
+        <p>Не вдалося надіслати підтвердження на email: {{ error }}</p>
+    {% endif %}
+    <a href="/flowers" class="btn btn-primary">Повернутися до каталогу</a>
+</section>
+
+{% endblock %}

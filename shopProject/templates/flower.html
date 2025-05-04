@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ flower.name }} - BloomShop{% endblock %}
+
+{% block content %}
+    <section class="container my-5">
+        <div class="row">
+            <!--image -->
+            <div class="col-md-5">
+                <img src="{{ flower.image_url or '/static/images/placeholder.jpg' }}"
+                     alt="{{ flower.name }}"
+                     class="img-fluid rounded shadow"
+                     style="max-height: 450px; object-fit: cover;">
+            </div>
+            <!-- details -->
+            <div class="col-md-7">
+                <h1 class="display-5 mb-3" style="font-family: 'Playfair Display', serif;">{{ flower.name }}</h1>
+                <p style="font-size: 16px">{{ flower.description or 'Опис відсутній' }}</p>
+                <h4 class="price-concrete-flower">Ціна: {{ flower.price }} грн</h4>
+
+                <!-- rating vis -->
+                {% if flower.average_rating %}
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="me-2">
+                            {% for i in range(5) %}
+                                {% if i < flower.average_rating|round %}
+                                    <span class="text-warning">★</span>
+                                {% else %}
+                                    <span class="text-secondary">☆</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <span>{{ flower.average_rating }} ({{ flower.review_count }} відгуків)</span>
+                    </div>
+                {% else %}
+                    <div class="text-muted mb-3">Ще немає оцінок</div>
+                {% endif %}
+
+                <!-- features -->
+                <ul class="list-unstyled mb-4">
+                    {% if flower.color %}
+                        <li><strong>Колір:</strong> {{ flower.color }};</li>
+                    {% endif %}
+                    {% if flower.size %}
+                        <li><strong>Розмір:</strong> {{ flower.size }};</li>
+                    {% endif %}
+                    {% if flower.season %}
+                        <li><strong>Сезон:</strong> {{ flower.season }};</li>
+                    {% endif %}
+                    {% if categories %}
+                        <li><strong>Категорії:</strong>
+                            {% for category in categories %}
+                                {{ category.name }}.{% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        </li>
+                    {% endif %}
+                </ul>
+
+                <form method="POST" action="{{ url_for('add_to_cart', flower_id=flower.id) }}">
+                    <button type="submit" class="btn btn-primary btn-lg">Додати до кошика</button>
+                </form>
+
+                <a href="/flowers" class="btn btn-secondary mt-3">Повернутися до каталогу</a>
+            </div>
+        </div>
+    </section>
+    {#    ratings#}
+    <section class="container my-5">
+        <div class="row">
+            <h3 class="mb-4">Відгуки</h3>
+
+            <div class="col-md-12">
+                {% if 'user_id' in session %}
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5>Залишити відгук</h5>
+                            <form method="POST" action="{{ url_for('add_review', flower_id=flower.id) }}">
+                                <div class="mb-3">
+                                    <label for="rating" class="form-label">Оцінка</label>
+                                    <select class="form-select" id="rating" name="rating" required>
+                                        <option value="" selected disabled>Оберіть оцінку</option>
+                                        <option value="5">5 - Відмінно</option>
+                                        <option value="4">4 - Добре</option>
+                                        <option value="3">3 - Задовільно</option>
+                                        <option value="2">2 - Погано</option>
+                                        <option value="1">1 - Дуже погано</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="comment" class="form-label">Коментар (необов'язково)</label>
+                                    <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Надіслати відгук</button>
+                            </form>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        Щоб залишити відгук, будь ласка <a href="{{ url_for('login') }}">увійдіть</a>.
+                    </div>
+                {% endif %}
+
+                <!-- ratings list -->
+                {% if flower.reviews %}
+                    <div class="list-group">
+                        {% for review in flower.reviews %}
+                            <div class="list-group-item mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <h5>{{ review.user.name }}</h5>
+                                    <div>
+                                        {% for i in range(5) %}
+                                            {% if i < review.rating %}
+                                                <span class="text-warning">★</span>
+                                            {% else %}
+                                                <span class="text-secondary">☆</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <small class="text-muted">{{ review.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
+                                {% if review.comment %}
+                                    <p class="mt-2 mb-0">{{ review.comment }}</p>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-secondary">Ще немає відгуків для цієї квітки.</div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

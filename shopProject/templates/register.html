@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}
+Реєстрація
+{% endblock %}
+{% block content %}
+<section class="container my-4">
+    <h1 class="text-center mb-4">Реєстрація</h1>
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+    <form method="POST" action="{{ url_for('register') }}" class="col-md-6 mx-auto">
+        <div class="mb-3">
+            <label for="name" class="form-label">Ім'я:</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Електронна пошта:</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="phone" class="form-label">Телефон:</label>
+            <input type="tel" class="form-control" id="phone" name="phone">
+        </div>
+        <div class="mb-3">
+            <label for="address" class="form-label">Адреса:</label>
+            <textarea class="form-control" id="address" name="address" rows="4"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Пароль:</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Зареєструватися</button>
+        <a href="{{ url_for('login') }}" class="btn btn-link">Вже є обліковий запис? Увійти</a>
+    </form>
+</section>
+
+{% endblock %}

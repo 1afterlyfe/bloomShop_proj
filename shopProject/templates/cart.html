@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}
+Кошик
+{% endblock %}
+{% block content %}
+
+<!-- Кошик -->
+<section class="container my-4">
+    <h1 class="text-center mb-4">Ваш кошик</h1>
+    {% if cart_items %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Зображення</th>
+                    <th>Назва</th>
+                    <th>Ціна</th>
+                    <th>Кількість</th>
+                    <th>Сума</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in cart_items %}
+                <tr>
+                    <td style="vertical-align: middle"><img src="{{ item.image_url }}" alt="{{ item.name }}" style="width: 50px;"></td>
+                    <td style="vertical-align: middle">{{ item.name }}</td>
+                    <td style="vertical-align: middle">{{ item.price }} грн</td>
+                    <td style="vertical-align: middle">
+                        <form method="POST" action="{{ url_for('update_cart', flower_id=item.flower_id) }}"
+                              class="d-inline">
+                            <input type="hidden" name="action" value="decrease">
+                            <button type="submit" class="btn btn-sm btn-outline-secondary"
+                                    style="border-radius: 8px; padding: 0 6px">-</button>
+                        </form>
+                        <span style="margin-left: 4px; margin-right: 4px">{{ item.quantity }}</span>
+                        <form method="POST" action="{{ url_for('update_cart', flower_id=item.flower_id) }}"
+                              class="d-inline">
+                            <input type="hidden" name="action" value="increase">
+                            <button type="submit" class="btn btn-sm btn-outline-secondary"
+                                    style="border-radius: 8px; padding: 0 6px">+</button>
+                        </form>
+                    </td>
+                    <td style="vertical-align: middle">{{ item.subtotal }} грн</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="text-end">
+            <h4>Загальна сума: {{ total_price }} грн</h4>
+            <a href="/checkout" class="btn btn-primary">Оформити замовлення</a>
+        </div>
+    {% else %}
+        <p class="text-center">Ваш кошик порожній.</p>
+        <a href="/flowers" class="btn btn-primary d-block mx-auto w-25">До каталогу</a>
+    {% endif %}
+</section>
+
+{% endblock %}

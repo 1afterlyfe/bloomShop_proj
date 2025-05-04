@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block title %}
+    Каталог
+{% endblock %}
+{% block content %}
+    <!-- filters -->
+    <section class="container mb-4">
+        <h5>Фільтри</h5>
+        <form action="{{ url_for('flowers') }}" method="GET" class="row g-3">
+            <div class="col-md-4">
+                <input class="form-control" type="search" name="search" placeholder="Пошук за назвою..."
+                       value="{{ current_filters.search }}" aria-label="Search">
+            </div>
+            <div class="col-md-4">
+                <input class="form-control" type="number" name="price_min" placeholder="Мін. ціна"
+                       value="{{ current_filters.price_min if current_filters.price_min is not none else '' }}"
+                       step="1">
+            </div>
+            <div class="col-md-4">
+                <input class="form-control" type="number" name="price_max" placeholder="Макс. ціна"
+                       value="{{ current_filters.price_max if current_filters.price_max is not none else '' }}"
+                       step="1">
+            </div>
+            <div class="col-md-4">
+                <select class="form-select" name="category">
+                    <option value="">Усі категорії</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}"
+                                {% if current_filters.category == category.id %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select class="form-select" name="color">
+                    <option value="">Усі кольори</option>
+                    {% for color in colors %}
+                        <option value="{{ color }}" {% if current_filters.color == color %}selected{% endif %}>
+                            {{ color }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select class="form-select" name="season">
+                    <option value="">Усі сезони</option>
+                    {% for season in seasons %}
+                        <option value="{{ season }}" {% if current_filters.season == season %}selected{% endif %}>
+                            {{ season }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="min_rating" class="form-label">Мінімальний рейтинг</label>
+                <select class="form-select" id="min_rating" name="min_rating">
+                    <option value="">Будь-який</option>
+                    <option value="4" {% if current_filters.get('min_rating') == 4 %}selected{% endif %}>4+ ★</option>
+                    <option value="3" {% if current_filters.get('min_rating') == 3 %}selected{% endif %}>3+ ★</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Застосувати</button>
+                <a href="{{ url_for('flowers') }}" class="btn btn-outline-secondary">Скинути</a>
+            </div>
+        </form>
+    </section>
+
+    <section class="container">
+        {% if flowers %}
+            <div class="row">
+                {% for flower in flowers %}
+                    <div class="col-md-3 mb-4">
+                        <a href="{{ url_for('flower', flower_id=flower.id) }}" class="card-link">
+                            <div class="card h-100">
+                                <img src="{{ flower.image_url or '/static/images/placeholder.jpg' }}"
+                                     class="card-img-top"
+                                     alt="{{ flower.name }}">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">{{ flower.name }}</h5>
+                                    <p class="card-text text-muted flex-grow-1">{{ flower.description|truncate(100) }}</p>
+                                    <p class="card-text"><strong>{{ flower.price }} грн.</strong></p>
+                                    <a href="{{ url_for('add_to_cart', flower_id=flower.id) }}"
+                                       class="btn btn-primary mt-2"
+                                       onclick="event.preventDefault(); fetch(this.href, {method: 'POST'}).then(() => location.reload());">
+                                        Додати до кошика
+                                    </a>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-center">Квіти не знайдено.</p>
+        {% endif %}
+
+        {#    pagination#}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if pagination.has_prev %}
+                    <li class="page-item"><a class="page-link"
+                                             href="{{ url_for('flowers', page=pagination.prev_num, **current_filters) }}">Попередня</a>
+                    </li>
+                {% endif %}
+                {% for num in pagination.iter_pages() %}
+                    <li class="page-item {% if pagination.page == num %}active{% endif %}">
+                        <a class="page-link" href="{{ url_for('flowers', page=num, **current_filters) }}">{{ num }}</a>
+                    </li>
+                {% endfor %}
+                {% if pagination.has_next %}
+                    <li class="page-item"><a class="page-link"
+                                             href="{{ url_for('flowers', page=pagination.next_num, **current_filters) }}">Наступна</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+
+    </section>
+
+{% endblock %}

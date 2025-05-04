@@ -1,0 +1,320 @@
+:root {
+    --primary-color: #F28FAD;
+    --secondary-color: #D4E4D4;
+    --navbar-bg: #FFF5F5;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh; /* Забезпечує мінімальну висоту */
+    display: flex;
+    flex-direction: column;
+    background-color: #fbeaea;
+}
+
+main {
+    flex-grow: 1; /* Контент займає весь доступний простір */
+}
+
+.footer {
+    background-color: #FFF5F5;
+    color: #5A5A5A;
+    padding: 1rem 0;
+    width: 100%;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    box-shadow: 0 8px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.navbar-light {
+    background-color: var(--navbar-bg) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav-link {
+    color: #390047 !important;
+    font-family: "Segoe UI Semibold", serif;
+    font-size: 1.1rem;
+    padding: 0.5rem 1rem;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--primary-color) !important;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: var(--primary-color);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-link:hover::after {
+    width: 50%;
+}
+
+.nav-item.active .nav-link {
+    color: var(--primary-color) !important;
+    background-color: rgba(242, 143, 173, 0.1);
+    border-radius: 5px;
+}
+
+.navbar-brand {
+    font-family: 'Century Gothic', cursive;
+    font-size: 28px;
+    font-style: italic;
+    color: #ff69b4;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(90deg, #ffb6c1, #ff69b4, #db7093);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 3s infinite linear;
+    display: inline-block;
+}
+
+h5 {
+    margin-block: 15px;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #E07B99;
+    border-color: #E07B99;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: #7c7a78;
+    border-color: #7c7a78;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #7c7a78;
+    border-color: #7c7a78;
+    transform: translateY(-2px);
+}
+
+.card {
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card-img-top {
+    height: 400px;
+    object-fit: cover;
+}
+
+/* Hero banner - start */
+
+.hero-banner {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/static/images/flowers-bg.jpg') center/cover no-repeat;
+    padding: 5rem 0;
+    position: relative;
+    color: #FFFFFF;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.hero-banner h1 {
+    font-family: 'Century Gothic', serif;
+    font-size: 3rem;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 1rem;
+}
+
+.hero-banner p {
+    font-family: 'Century Gothic', sans-serif;
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.hero-banner .btn {
+    background-color: #FFFFFF;
+    color: var(--primary-color); /* #F28FAD */
+    border: none;
+    padding: 0.75rem 2rem;
+    font-family: 'Verdana', sans-serif;
+    font-size: 1.2rem;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.hero-banner .btn:hover {
+    background-color: var(--primary-color);
+    color: #FFFFFF;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.hero-banner h1 {
+    animation: fadeIn 1s ease-in;
+}
+
+.hero-banner p {
+    animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-banner {
+        padding: 3rem 0;
+    }
+
+    .hero-banner h1 {
+        font-size: 2rem;
+    }
+
+    .hero-banner p {
+        font-size: 1rem;
+    }
+
+    .hero-banner .btn {
+        padding: 0.5rem 1.5rem;
+        font-size: 1rem;
+    }
+}
+
+/* Hero banner - end */
+
+@media (max-width: 992px) {
+    .nav-link {
+        font-size: 1rem;
+        padding: 0.5rem;
+        text-align: center;
+    }
+
+    .nav-link:hover::after {
+        width: 30%;
+    }
+}
+
+.navbar-toggler {
+    border-color: var(--primary-color);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23F28FAD' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.btn-link {
+    margin-left: 10px;
+    background-color: #ffffff;
+    border-color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.btn-link:hover {
+    background-color: #ffffff;
+    border-color: #ffffff;
+    transform: translateY(-2px);
+}
+
+.btn .btn-outline-secondary .mt-3 {
+    color: #5A5A5A;
+    border-color: #5A5A5A;
+}
+
+.btn-outline-secondary mt-3:hover {
+    background-color: var(--primary-color);
+    color: #FFFFFF;
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .flower-detail img {
+        max-height: 300px;
+    }
+    .flower-detail h1 {
+        font-size: 1.8rem;
+    }
+    .flower-detail .lead {
+        font-size: 1rem;
+    }
+}
+
+.card-link {
+    text-decoration: none;
+}
+
+.card-link .card-title {
+    color: #333;
+}
+
+.card-link .card-text {
+    color: #6c757d;
+}
+
+.card-link .card-text strong {
+    color: #333;
+}
+
+.card-body {
+    position: relative;
+    padding-bottom: 60px;
+}
+
+.card-body .btn {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
+}
+
+.card-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.text-end {
+    padding: 10px 0px 0 0px;
+}
+
+.text-end-confirm {
+
+    margin-top: 60px;
+    text-align: center;
+}
+
+h4 {
+    padding: 0 0 10px 0;
+}
+
+.price-concrete-flower {
+    font-family: 'Century Gothic';
+    font-size: 28px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+    color: #E07B99;
+}

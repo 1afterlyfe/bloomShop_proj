@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}
+Список замовлень
+{% endblock %}
+{% block content %}
+
+<section class="container my-4">
+    <h1 class="text-center mb-4">Управління замовленнями</h1>
+    {% if orders %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>№ Замовлення</th>
+                <th>Користувач</th>
+                <th>Email</th>
+                <th>Сума</th>
+                <th>Статус</th>
+                <th>Дата</th>
+                <th>Дії</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for order in orders %}
+                <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.user.name if order.user else 'Гість' }}</td>
+                    <td>{{ order.email or (order.user.email if order.user else 'Немає') }}</td>
+                    <td>{{ order.total_price }} грн</td>
+                    <td>{{ order.status }}</td>
+                    <td>{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+                        <a href="{{ url_for('admin_order_update', order_id=order.id) }}" class="btn btn-sm btn-primary">Оновити</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-center">Замовлення відсутні.</p>
+    {% endif %}
+</section>
+
+{% endblock %}

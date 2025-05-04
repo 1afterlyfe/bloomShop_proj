@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}
+Оформлення замовлення
+{% endblock %}
+{% block content %}
+
+<!-- forma -->
+<section class="container my-4">
+    <h1 class="text-center mb-4">Оформлення замовлення</h1>
+    <form method="POST" action="{{ url_for('checkout') }}">
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Контактні дані</h4>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Ім'я:</label>
+                    <input type="text" class="form-control" id="name" name="name"
+                           value="{{ user.name if user else '' }}" {% if user %}readonly{% endif %} required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Електронна пошта:</label>
+                    <input type="email" class="form-control" id="email" name="email"
+                           value="{{ user.email if user else '' }}" {% if user %}readonly{% endif %} required>
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Телефон:</label>
+                    <input type="tel" class="form-control" id="phone" name="phone"
+                           value="{{ user.phone if user else '' }}" {% if user %}readonly{% endif %}>
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Адреса доставки:</label>
+                    <textarea class="form-control" id="address" name="address" rows="4" required>
+                        {{- user.address if user else '' -}}
+                    </textarea>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h4>Спосіб доставки</h4>
+                <div class="mb-3">
+                    <select class="form-select" name="delivery_method" required>
+                        <option value="courier">Кур'єрська доставка</option>
+                        <option value="pickup">Самовивіз</option>
+                        <option value="post">Поштова доставка</option>
+                    </select>
+                </div>
+                <h4>Спосіб оплати</h4>
+                <div class="mb-3">
+                    <select class="form-select" name="payment_method" required>
+                        <option value="online">Онлайн-оплата</option>
+                        <option value="cash">Оплата при отриманні</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="text-end-confirm">
+            <button type="submit" class="btn btn-primary">Підтвердити замовлення</button>
+        </div>
+    </form>
+</section>
+
+{% endblock %}
