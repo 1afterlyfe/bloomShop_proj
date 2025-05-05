@@ -209,7 +209,8 @@ def flowers():
             'color': color,
             'season': season,
             'price_min': price_min,
-            'price_max': price_max
+            'price_max': price_max,
+            'min_rating': min_rating
         }
     )
 
