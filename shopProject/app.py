@@ -267,18 +267,14 @@ def cart():
 @app.route('/cart/update/<int:flower_id>', methods=['POST'])
 def update_cart(flower_id):
     cart = get_or_create_cart()
-    action = request.form.get('action')
-    item = OrderItem.query.filter_by(order_id=cart.id, flower_id=flower_id).first()
+    new_quantity = request.form.get('quantity', type=int)
 
-    if item:
-        if action == 'increase':
-            item.quantity += 1
-        elif action == 'decrease':
-            item.quantity -= 1
-            if item.quantity <= 0:
-                db.session.delete(item)
-        cart.recalculate_total()
-        db.session.commit()
+    if new_quantity and new_quantity >= 1:
+        item = OrderItem.query.filter_by(order_id=cart.id, flower_id=flower_id).first()
+        if item:
+            item.quantity = new_quantity
+            db.session.commit()
+            cart.recalculate_total()
     return redirect(url_for('cart'))
 
 
@@ -514,6 +510,17 @@ def add_review(flower_id):
             flash('Сталася помилка при додаванні відгуку', 'danger')
 
         return redirect(url_for('flower', flower_id=flower_id))
+
+@app.route('/clear_cart', methods=['POST'])
+def clear_cart():
+    cart = get_or_create_cart()
+
+    OrderItem.query.filter_by(order_id=cart.id).delete()
+
+    cart.total_price = 0
+    db.session.commit()
+
+    return redirect(url_for('cart'))
 
 with app.app_context():
     db.create_all()
