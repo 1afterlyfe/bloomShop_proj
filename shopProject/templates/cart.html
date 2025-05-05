@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 {% block title %}
-Кошик
+    Кошик
 {% endblock %}
 {% block content %}
 
-<!-- Кошик -->
-<section class="container my-4">
-    <h1 class="text-center mb-4">Ваш кошик</h1>
-    {% if cart_items %}
-        <table class="table table-striped">
-            <thead>
+    <!-- Кошик -->
+    <section class="container my-4">
+        <h1 class="text-center mb-4">Ваш кошик</h1>
+        {% if cart_items %}
+            <table class="table table-striped">
+                <thead>
                 <tr>
                     <th>Зображення</th>
                     <th>Назва</th>
@@ -17,41 +17,62 @@
                     <th>Кількість</th>
                     <th>Сума</th>
                 </tr>
-            </thead>
-            <tbody>
-            {% for item in cart_items %}
-                <tr>
-                    <td style="vertical-align: middle"><img src="{{ item.image_url }}" alt="{{ item.name }}" style="width: 50px;"></td>
-                    <td style="vertical-align: middle">{{ item.name }}</td>
-                    <td style="vertical-align: middle">{{ item.price }} грн</td>
-                    <td style="vertical-align: middle">
-                        <form method="POST" action="{{ url_for('update_cart', flower_id=item.flower_id) }}"
-                              class="d-inline">
-                            <input type="hidden" name="action" value="decrease">
-                            <button type="submit" class="btn btn-sm btn-outline-secondary"
-                                    style="border-radius: 8px; padding: 0 6px">-</button>
-                        </form>
-                        <span style="margin-left: 4px; margin-right: 4px">{{ item.quantity }}</span>
-                        <form method="POST" action="{{ url_for('update_cart', flower_id=item.flower_id) }}"
-                              class="d-inline">
-                            <input type="hidden" name="action" value="increase">
-                            <button type="submit" class="btn btn-sm btn-outline-secondary"
-                                    style="border-radius: 8px; padding: 0 6px">+</button>
-                        </form>
-                    </td>
-                    <td style="vertical-align: middle">{{ item.subtotal }} грн</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        <div class="text-end">
-            <h4>Загальна сума: {{ total_price }} грн</h4>
-            <a href="/checkout" class="btn btn-primary">Оформити замовлення</a>
-        </div>
-    {% else %}
-        <p class="text-center">Ваш кошик порожній.</p>
-        <a href="/flowers" class="btn btn-primary d-block mx-auto w-25">До каталогу</a>
-    {% endif %}
-</section>
+                </thead>
+                <tbody>
+                {% for item in cart_items %}
+                    <tr>
+                        <td style="vertical-align: middle"><img src="{{ item.image_url }}" alt="{{ item.name }}"
+                                                                style="width: 50px;"></td>
+                        <td style="vertical-align: middle">{{ item.name }}</td>
+                        <td style="vertical-align: middle">{{ item.price }} грн</td>
+                        <td style="vertical-align: middle">
+
+                            <form method="POST" action="{{ url_for('update_cart', flower_id=item.flower_id) }}"
+                                  class="d-inline">
+                                <label>
+                                    <input type="number"
+                                           name="quantity"
+                                           value="{{ item.quantity }}"
+                                           min="1"
+                                           class="form-control form-control-sm"
+                                           style="width: 60px; display: inline-block; text-align: center"
+                                           onchange="this.form.submit()">
+                                </label>
+                            </form>
+
+                        </td>
+                        <td style="vertical-align: middle">{{ item.subtotal }} грн</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <div style="padding-bottom: 15px">
+                    <form method="POST" action="{{ url_for('clear_cart') }}" class="d-inline">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Очистити кошик
+                        </button>
+                    </form>
+                </div>
+                <div>
+                    <h4>Загальна сума: {{ total_price }} грн.</h4>
+                    <a href="/checkout" class="btn btn-primary" style="">Оформити замовлення</a>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-center">Ваш кошик порожній.</p>
+            <a href="/flowers" class="btn btn-primary d-block mx-auto w-25">До каталогу</a>
+        {% endif %}
+    </section>
+
+    <script>
+        document.querySelectorAll('form[action="{{ url_for('clear_cart') }}"]').forEach(form => {
+        form.addEventListener('submit', function (e) {
+            if (!confirm('Ви впевнені, що хочете очистити кошик?')) {
+                e.preventDefault();
+            }
+        });
+    });
+    </script>
 
 {% endblock %}
