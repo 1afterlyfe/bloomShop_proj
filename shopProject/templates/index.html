@@ -26,7 +26,10 @@
                         <h5 class="card-title">{{ flower.name }}</h5>
                         <p class="card-text">{{ flower.description|truncate(100) }}</p>
                         <p class="card-text"><strong>{{ flower.price }} грн.</strong></p>
-                        <a href="#" class="btn btn-primary">Додати до кошика</a>
+                        <a href="{{ url_for('add_to_cart', flower_id=flower.id) }}"
+                                       class="btn btn-primary mt-2"
+                                       onclick="event.preventDefault(); fetch(this.href, {method: 'POST'}).then(() => location.reload());">
+                                        Додати до кошика</a>
                     </div>
                 </div>
             </div>
