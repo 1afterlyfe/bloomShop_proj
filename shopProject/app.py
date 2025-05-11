@@ -89,6 +89,13 @@ class Order(db.Model):
     user = db.relationship('User', backref='orders')
     items = db.relationship('OrderItem', backref='order', lazy=True)
 
+    CART = 'cart'
+    ACCEPTED = 'accepted'
+    PROCESSING = 'processing'
+    SHIPPED = 'shipped'
+    DELIVERED = 'delivered'
+    CANCELLED = 'cancelled'
+
     def recalculate_total(self):
         """Перераховує загальну суму кошика на основі елементів."""
         self.total_price = sum(item.price * item.quantity for item in self.items)
@@ -445,14 +452,14 @@ def logout():
 @app.route('/admin/orders')
 @admin_required
 def admin_orders():
-    orders = Order.query.all()
+    orders = Order.query.filter(Order.status.in_(['accepted', 'processing', 'shipped', 'delivered', 'cancelled'])).all()
     return render_template('admin_orders.html', orders=orders)
 
 
 @app.route('/admin/order/<int:order_id>/update', methods=['GET', 'POST'])
 @admin_required
 def admin_order_update(order_id):
-    order = Order.query.get_or_404(order_id)
+    order = db.session.get_or_404(Order, order_id)
     statuses = ['accepted', 'processing', 'shipped', 'delivered', 'cancelled']
     if request.method == 'POST':
         new_status = request.form.get('status')
