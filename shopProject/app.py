@@ -459,7 +459,7 @@ def admin_orders():
 @app.route('/admin/order/<int:order_id>/update', methods=['GET', 'POST'])
 @admin_required
 def admin_order_update(order_id):
-    order = db.session.get_or_404(Order, order_id)
+    order = Order.query.get_or_404(order_id)
     statuses = ['accepted', 'processing', 'shipped', 'delivered', 'cancelled']
     if request.method == 'POST':
         new_status = request.form.get('status')
