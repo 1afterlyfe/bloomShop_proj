@@ -1,13 +1,12 @@
 from flask import Flask, render_template, request, session, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
-from datetime import datetime
+from datetime import datetime, UTC
 from flask_bcrypt import Bcrypt
 from functools import wraps
 from flask import g
 from sqlalchemy import func
 from sqlalchemy.orm import validates
-from data_tp import mail_username, mail_password, mail_default_sender
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///bloomshop.db'
@@ -16,9 +15,9 @@ app.config['SECRET_KEY'] = '123123'
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = f'{mail_username}'
-app.config['MAIL_PASSWORD'] = f'{mail_password}'
-app.config['MAIL_DEFAULT_SENDER'] = f'{mail_default_sender}'
+app.config['MAIL_USERNAME'] = 'romaplay122456@gmail.com'
+app.config['MAIL_PASSWORD'] = 'bujk gujf qeaa favk'
+app.config['MAIL_DEFAULT_SENDER'] = 'romaplay122456@gmail.com'
 
 db = SQLAlchemy(app)
 mail = Mail(app)
@@ -59,7 +58,7 @@ class Review(db.Model):
     flower_id = db.Column(db.Integer, db.ForeignKey('flower.id'), nullable=False)
     rating = db.Column(db.Integer, nullable=False)  # 1-5
     comment = db.Column(db.Text, nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now(UTC))
 
     user = db.relationship('User', backref='reviews')
     flower = db.relationship('Flower', backref='reviews')
@@ -86,7 +85,7 @@ class Order(db.Model):
     payment_method = db.Column(db.String(50), nullable=True)
     address = db.Column(db.Text, nullable=True)
     email = db.Column(db.String(120), nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now(UTC))
     user = db.relationship('User', backref='orders')
     items = db.relationship('OrderItem', backref='order', lazy=True)
 
@@ -193,8 +192,6 @@ def flowers():
     categories = Category.query.all()
     colors = [c[0] for c in db.session.query(Flower.color).distinct().filter(Flower.color != None).all()]
     seasons = [s[0] for s in db.session.query(Flower.season).distinct().filter(Flower.season != None).all()]
-
-
 
     return render_template(
         'flowers.html',
