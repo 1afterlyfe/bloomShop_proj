@@ -1,50 +1,53 @@
 {% extends 'base.html' %}
 {% block title %}
-Головна
+    Головна
 {% endblock %}
 {% block content %}
 
-<!-- banner -->
-<div class="hero-banner text-center text-white py-5">
-    <div class="container">
-        <h1 class="display-4">BloomShop — квіти для будь-якої події</h1>
-        <p class="lead">Замовляйте свіжі квіти з доставкою!</p>
-        <a href="/flowers" class="btn btn-light btn-lg">Переглянути каталог</a>
+    <!-- banner -->
+    <div class="hero-banner text-center text-white py-5">
+        <div class="container">
+            <h1 class="display-4">BloomShop — квіти для будь-якої події</h1>
+            <p class="lead">Замовляйте свіжі квіти з доставкою!</p>
+            <a href="/flowers" class="btn btn-light btn-lg">Переглянути каталог</a>
+        </div>
     </div>
-</div>
 
-<!-- popular flowers -->
-<section class="container my-5">
-    <h2 class="text-center mb-4">Популярні квіти</h2>
-    <div class="row">
-        {% for flower in flowers %}
-            <div class="col-md-3 mb-4">
-                <div class="card h-100">
-                    <img src="{{ flower.image_url or '/static/images/placeholder.jpg' }}" class="card-img-top"
-                         alt="{{ flower.name }}">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ flower.name }}</h5>
-                        <p class="card-text">{{ flower.description|truncate(100) }}</p>
-                        <p class="card-text"><strong>{{ flower.price }} грн.</strong></p>
-                        <a href="#" class="btn btn-primary">Додати до кошика</a>
+    <!-- popular flowers -->
+    <section class="container my-5">
+        <h2 class="text-center mb-4">Популярні квіти</h2>
+        <div class="row">
+            {% for flower in flowers %}
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100">
+                        <img src="{{ flower.image_url or '/static/images/placeholder.jpg' }}" class="card-img-top"
+                             alt="{{ flower.name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ flower.name }}</h5>
+                            <p class="card-text">{{ flower.description|truncate(100) }}</p>
+                            <p class="card-text"><strong>{{ flower.price }} грн.</strong></p>
+                            <a href="{{ url_for('add_to_cart', flower_id=flower.id) }}"
+                               class="btn btn-primary mt-2"
+                               onclick="event.preventDefault(); fetch(this.href, {method: 'POST'}).then(() => location.reload());">
+                                Додати до кошика</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
-    </div>
-</section>
+            {% endfor %}
+        </div>
+    </section>
 
-<!-- categories -->
-<section class="container my-5">
-    <h2 class="text-center mb-4">Категорії</h2>
-    <div class="row">
-        {% for category in categories %}
-            <div class="col-md-4 mb-4">
-                <a href="/flowers?category={{ category.id }}"
-                   class="btn btn-outline-primary w-100">{{ category.name }}</a>
-            </div>
-        {% endfor %}
-    </div>
-</section>
+    <!-- categories -->
+    <section class="container my-5">
+        <h2 class="text-center mb-4">Категорії</h2>
+        <div class="row">
+            {% for category in categories %}
+                <div class="col-md-4 mb-4">
+                    <a href="/flowers?category={{ category.id }}"
+                       class="btn btn-outline-primary w-100">{{ category.name }}</a>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
 
 {% endblock %}

@@ -19,7 +19,7 @@
                     </li>
                     {% endif %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/logout">&#127939 Вийти</a>
+                        <a class="nav-link" href="/logout" onclick="return confirm('Ви впевнені, що хочете вийти?');">🏃 Вийти</a>
                     </li>
                 {% else %}
                     <li class="nav-item {% if request.endpoint == 'login' %}active{% endif %}">
