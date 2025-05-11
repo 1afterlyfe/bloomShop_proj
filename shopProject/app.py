@@ -103,12 +103,18 @@ def get_or_create_cart():
             db.session.commit()
         return cart
     else:
-        if 'cart_id' not in session:
-            cart = Order(status='cart')
-            db.session.add(cart)
-            db.session.commit()
-            session['cart_id'] = cart.id
-        return Order.query.get(session['cart_id'])
+        cart_id = session.get('cart_id')
+        if cart_id:
+            cart = db.session.get(Order, cart_id)
+            if cart and cart.status == 'cart':
+                return cart
+            session.pop('cart_id', None)
+
+        cart = Order(status='cart')
+        db.session.add(cart)
+        db.session.commit()
+        session['cart_id'] = cart.id
+        return cart
 
 
 class OrderItem(db.Model):
@@ -247,18 +253,22 @@ def add_to_cart(flower_id):
 @app.route('/cart')
 def cart():
     cart = get_or_create_cart()
+    if not cart:
+        return render_template('cart.html', cart_items=[], total_price=0.0)
+
     cart_items = []
     for item in cart.items:
-        flower = Flower.query.get(item.flower_id)
-        cart_items.append({
-            'flower_id': item.flower_id,
-            'name': flower.name,
-            'price': item.price,
-            'quantity': item.quantity,
-            'image_url': flower.image_url or '/static/images/placeholder.jpg',
-            'subtotal': item.price * item.quantity
-        })
-    total_price = cart.total_price
+        flower = db.session.get(Flower, item.flower_id)
+        if flower:
+            cart_items.append({
+                'flower_id': item.flower_id,
+                'name': flower.name,
+                'price': item.price,
+                'quantity': item.quantity,
+                'image_url': flower.image_url or '/static/images/placeholder.jpg',
+                'subtotal': item.price * item.quantity
+            })
+    total_price = cart.total_price or 0.0
     return render_template('cart.html', cart_items=cart_items, total_price=total_price)
 
 
