@@ -537,6 +537,29 @@ def clear_cart():
 
     return redirect(url_for('cart'))
 
+@app.route('/cleanup_carts')
+@admin_required
+def cleanup_carts():
+    threshold = datetime.now(UTC) - timedelta(days=3)
+    old_carts = Order.query.filter(
+        Order.status == 'cart',
+        Order.created_at < threshold
+    ).all()
+
+    if not old_carts:
+        flash('Немає застарілих кошиків для видалення.', 'info')
+        logger.info('No outdated carts to delete.')
+    else:
+        cart_count = len(old_carts)
+        for cart in old_carts:
+            OrderItem.query.filter_by(order_id=cart.id).delete()
+            db.session.delete(cart)
+        db.session.commit()
+        flash(f'Успішно видалено {cart_count} застарілих кошиків.', 'success')
+        logger.info(f'Deleted {cart_count} outdated cart(s).')
+
+    return redirect(url_for('admin_orders'))
+
 with app.app_context():
     db.create_all()
 
