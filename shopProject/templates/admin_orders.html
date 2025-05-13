@@ -39,5 +39,7 @@
         <p class="text-center">Замовлення відсутні.</p>
     {% endif %}
 </section>
-
+<div style="text-align: center">
+    <a href="{{ url_for('cleanup_carts') }}" class="btn btn-danger mb-3">Очистити застарілі кошики</a>
+</div>
 {% endblock %}
