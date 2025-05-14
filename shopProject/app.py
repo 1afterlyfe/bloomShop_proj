@@ -460,7 +460,13 @@ def admin_orders():
 @admin_required
 def admin_order_update(order_id):
     order = Order.query.get_or_404(order_id)
-    statuses = ['accepted', 'processing', 'shipped', 'delivered', 'cancelled']
+    statuses = [
+        Order.ACCEPTED,
+        Order.PROCESSING,
+        Order.SHIPPED,
+        Order.DELIVERED,
+        Order.CANCELLED
+    ]
     if request.method == 'POST':
         new_status = request.form.get('status')
         if new_status in statuses:
