@@ -490,6 +490,7 @@ def admin_order_update(order_id):
                         """
                     )
                     mail.send(msg)
+                flash('Статус замовлення успішно змінено!', 'success')
                 return redirect(url_for('admin_orders'))
             except Exception as e:
                 db.session.rollback()
